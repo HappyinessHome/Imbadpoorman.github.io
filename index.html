@@ -1,1 +1,21 @@
-<a href="wwww.baidu.com">点我百度</a>
+JavaType和ofType都是用来指定对象类型的，但是JavaType是用来指定pojo中属性的类型，而ofType指定的是映射到list集合属性中pojo的类型。
+pojo类：
+publicclass User {
+    privateint id;
+    privateString username;
+    privateString mobile;
+    privateList<Post>posts;
+}
+
+user.xml：
+<resultMap type="User" id="resultUserMap">
+         <result property="id" javaType="int" column="user_id" />
+         <result property="username" javaType="string" column="username" />
+         <result property="mobile"  column="mobile" />
+                        <!--javatype指定的是user对象的属性的类型（例如id，posts），而oftype指定的是映射到list集合属性中pojo的类型（本例指的是post类型）-->
+         <collection property="posts"  ofType="com.spenglu.Post"  javaType="java.util.ArrayList" column="userid">
+             <id property="id" column="post_id" javaType="int" jdbcType="INTEGER"/>   
+            <result property="title" column="title" javaType="string" jdbcType="VARCHAR"/>
+            <result property="content" column="content" javaType="string" jdbcType="VARCHAR"/>
+         </collection>
+    </resultMap>
