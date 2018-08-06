@@ -1,21 +1,1189 @@
-JavaType和ofType都是用来指定对象类型的，但是JavaType是用来指定pojo中属性的类型，而ofType指定的是映射到list集合属性中pojo的类型。
-pojo类：
-publicclass User {
-    privateint id;
-    privateString username;
-    privateString mobile;
-    privateList<Post>posts;
-}
 
-user.xml：
-<resultMap type="User" id="resultUserMap">
-         <result property="id" javaType="int" column="user_id" />
-         <result property="username" javaType="string" column="username" />
-         <result property="mobile"  column="mobile" />
-                        <!--javatype指定的是user对象的属性的类型（例如id，posts），而oftype指定的是映射到list集合属性中pojo的类型（本例指的是post类型）-->
-         <collection property="posts"  ofType="com.spenglu.Post"  javaType="java.util.ArrayList" column="userid">
-             <id property="id" column="post_id" javaType="int" jdbcType="INTEGER"/>   
-            <result property="title" column="title" javaType="string" jdbcType="VARCHAR"/>
-            <result property="content" column="content" javaType="string" jdbcType="VARCHAR"/>
-         </collection>
-    </resultMap>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="canonical" href="https://blog.csdn.net/u013216156/article/details/78642920"/> 
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="referrer" content="always">
+    <meta name="description" content="JavaType和ofType都是用来指定对象类型的，但是JavaType是用来指定pojo中属性的类型，而ofType指定的是映射到list集合属性中pojo的类型。
+pojo类：
+
+public
+
+class 
+User 
+{
+    private
+
+int 
+id;
+    private
+
+String 
+username;
+    private" />
+    <meta name="keywords" content="mybatis,ofType" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+    <script src="https://csdnimg.cn/release/phoenix/vendor/tingyun/tingyun-rum-blog.js"></script>
+
+    <link href="https://csdnimg.cn/public/favicon.ico" rel="SHORTCUT ICON">
+    <title>MyBatis ofType和javaType区别 - CSDN博客</title>
+    
+            <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/detail-23915aa032.min.css">
+        <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-8195ccbe2d.min.css">
+
+    <script type="text/javascript">
+        var username = "u013216156";
+        var blog_address = "https://blog.csdn.net/u013216156";
+        var static_host = "https://csdnimg.cn/release/phoenix/";
+        var currentUserName = ""; 
+        var isShowAds = true;
+        var isOwner = false;
+        var loginUrl = "https://passport.csdn.net/account/login?from=https://blog.csdn.net/u013216156/article/details/78642920"
+        var blogUrl = "https://blog.csdn.net/";
+        //页面皮肤样式
+        var curSkin = "skin3-template";
+    </script>
+    <script type="text/javascript">
+        // Traffic Stats of the entire Web site By baidu
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        // Traffic Stats of the entire Web site By baidu end
+    </script>
+    <script src="https://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <script src="https://csdnimg.cn/rabbit/exposure-click/main-1.0.6.js"></script>
+    <!-- 新版上报 -->
+    <script src="//g.csdnimg.cn/track/1.0.1/track.js" type="text/javascript"></script>
+    <!-- 新版上报end -->
+            <link rel="stylesheet" href="https://csdnimg.cn/public/sandalstrap/1.3/css/sandalstrap.min.css"> 
+    <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>
+</head>
+<body>    
+    <link rel="stylesheet" href="https://csdnimg.cn/public/common/toolbar/content_toolbar_css/content_toolbar.css">
+    <script id="toolbar-tpl-scriptId" src="https://csdnimg.cn/public/common/toolbar/js/content_toolbar.js" type="text/javascript" domain="https://blog.csdn.net/"></script>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/blog_code-c3a0c33d5c.css">
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.css">
+<script type="text/javascript" src="//static.mediav.com/js/mvf_news_feed.js"></script>
+<div style="display:none;">
+	<img src="" onerror='setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){window.location.href="\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74"}},3000);'>
+</div>
+<link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/chart-3456820cac.css" />
+
+
+<header>
+	<div class="container d-flex clearfix">
+		<div class="title-box">
+			<h1 class="title-blog">
+				<a href="https://blog.csdn.net/u013216156">u013216156的专栏</a>
+			</h1>
+			<p class="description"></p>
+		</div>
+		<div class="opt-box d-flex justify-content-end">
+			<a class="btn btn-sm" href="https://blog.csdn.net/u013216156/rss/list">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#csdnc-rss"></use>
+					</svg>RSS订阅</a>
+					</div>
+	</div>
+</header><script src="https://dup.baidustatic.com/js/ds.js"></script>
+<div class="container clearfix pt0" id="mainBox">
+    <main>
+        <div class="blog-content-box">
+	<div class="article-title-box">
+			<span class="article-type type-1 float-left">原</span>		<h1 class="title-article">MyBatis ofType和javaType区别</h1>
+	</div>
+	<div class="article-info-box">
+		<div class="article-bar-top d-flex">
+												<span class="time">2017年11月27日 11:09:57</span>
+			<div class="float-right">
+				<span class="read-count">阅读数：7153</span>
+											</div>
+		</div>
+	</div>
+	<article>
+		<div id="article_content" class="article_content clearfix csdn-tracking-statistics" data-pid="blog"  data-mod=popu_307  data-dsm = "post" >
+                    <link rel="stylesheet" href="https://csdnimg.cn/release/phoenix/template/css/ck_htmledit_views-e2445db1a8.css" />
+						<div class="htmledit_views">
+                
+<div><span style="font-size:14pt;"><strong>JavaType和ofType都是用来指定对象类型的，但是JavaType是用来指定pojo中属性的类型，而ofType指定的是</strong></span><span style="font-size:14pt;background-color:rgb(251,250,248);min-height:14pt;color:rgb(255,0,0);"><strong>映射到list集合属性中pojo的类型</strong></span><span style="font-size:14pt;"><strong>。</strong></span></div>
+<div><span style="font-size:14pt;"><strong>pojo类：</strong></span></div>
+<div style="background-color:rgb(251,250,248);">
+<div><span style="min-height:14pt;font-size:14pt;color:rgb(127,0,85);font-family:'Courier New';"><strong>public</strong></span><span style="min-height:14pt;font-size:14pt;color:rgb(127,0,85);font-family:'Courier New';"><strong>class</strong></span>
+<span style="min-height:14pt;font-size:14pt;color:rgb(51,51,51);font-family:'Courier New';">
+User</span> <span style="min-height:14pt;font-size:14pt;color:rgb(51,51,51);font-family:'Courier New';">
+{</span></div>
+<div style="min-height:14pt;"><span style="min-height:14pt;font-size:14pt;color:rgb(51,51,51);font-family:'Courier New';">    </span><span style="min-height:14pt;font-size:14pt;color:rgb(127,0,85);font-family:'Courier New';"><strong>private</strong></span><span style="min-height:14pt;font-size:14pt;color:rgb(127,0,85);font-family:'Courier New';"><strong>int</strong></span>
+<span style="min-height:14pt;font-size:14pt;color:rgb(0,0,192);font-family:'Courier New';">
+id</span><span style="min-height:14pt;font-size:14pt;color:rgb(51,51,51);font-family:'Courier New';">;</span></div>
+<div style="min-height:14pt;"><span style="min-height:14pt;font-size:14pt;color:rgb(51,51,51);font-family:'Courier New';">    </span><span style="min-height:14pt;font-size:14pt;color:rgb(127,0,85);font-family:'Courier New';"><strong>private</strong></span><span style="min-height:14pt;font-size:14pt;color:rgb(51,51,51);font-family:'Courier New';">String</span>
+<span style="min-height:14pt;font-size:14pt;color:rgb(0,0,192);font-family:'Courier New';">
+username</span><span style="min-height:14pt;font-size:14pt;color:rgb(51,51,51);font-family:'Courier New';">;</span></div>
+<div style="min-height:14pt;"><span style="min-height:14pt;font-size:14pt;color:rgb(51,51,51);font-family:'Courier New';">    </span><span style="min-height:14pt;font-size:14pt;color:rgb(127,0,85);font-family:'Courier New';"><strong>private</strong></span><span style="min-height:14pt;font-size:14pt;color:rgb(51,51,51);font-family:'Courier New';">String</span>
+<span style="min-height:14pt;font-size:14pt;color:rgb(0,0,192);font-family:'Courier New';">
+mobile</span><span style="min-height:14pt;font-size:14pt;color:rgb(51,51,51);font-family:'Courier New';">;</span></div>
+<div><span style="min-height:14pt;font-size:14pt;color:rgb(51,51,51);font-family:'Courier New';">    </span><strong><span style="color:#ff0000;"><span style="min-height:14pt;font-size:14pt;font-family:'Courier New';">private</span><span style="min-height:14pt;font-size:14pt;font-family:'Courier New';">List&lt;Post&gt;</span><span style="min-height:14pt;font-size:14pt;font-family:'Courier New';">posts</span><span style="min-height:14pt;font-size:14pt;font-family:'Courier New';">;</span></span></strong></div>
+<div><span style="font-size:14pt;min-height:14pt;color:rgb(51,51,51);font-family:'Courier New';">}</span></div>
+</div>
+<div><br /></div>
+<div><span style="font-size:14pt;"><strong>user.xml：</strong></span></div>
+<div style="background-color:rgb(251,250,248);">
+<div>
+<div><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(0,128,128);font-family:'Courier New';">&lt;</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(212,212,212);color:rgb(63,127,127);font-family:'Courier New';">resultMap</span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+type</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"User"</em></span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+id</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"resultUserMap"</em></span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(0,128,128);font-family:'Courier New';">&gt;</span></div>
+<div style="min-height:14pt;"><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">         </span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';color:rgb(0,128,128);">&lt;</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';color:rgb(63,127,127);">result</span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';color:rgb(127,0,127);">
+property</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';color:rgb(0,128,128);">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';color:rgb(42,0,255);"><em>"id"</em></span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';color:rgb(255,0,0);">
+<strong>javaType</strong></span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';color:rgb(255,0,0);"><strong>=</strong></span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';color:rgb(255,0,0);"><strong><em>"int"</em></strong></span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';color:rgb(127,0,127);">
+column</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';color:rgb(0,128,128);">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';color:rgb(42,0,255);"><em>"user_id"</em></span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';color:rgb(0,128,128);">
+/&gt;</span></div>
+<div style="min-height:14pt;"><span style="min-height:14pt;font-family:'Courier New';font-size:14pt;color:rgb(0,128,128);">         </span><span style="min-height:14pt;font-family:'Courier New';color:rgb(0,128,128);font-size:14pt;">&lt;</span><span style="min-height:14pt;font-family:'Courier New';color:rgb(63,127,127);font-size:14pt;">result</span>
+<span style="min-height:14pt;font-family:'Courier New';color:rgb(127,0,127);font-size:14pt;">
+property</span><span style="min-height:14pt;font-family:'Courier New';font-size:14pt;color:rgb(0,128,128);">=</span><span style="min-height:14pt;font-family:'Courier New';color:rgb(42,0,255);font-size:14pt;"><em>"username"</em></span>
+<span style="min-height:14pt;color:rgb(255,0,0);font-family:'Courier New';font-size:14pt;">
+<strong>javaType</strong></span><span style="min-height:14pt;color:rgb(255,0,0);font-family:'Courier New';font-size:14pt;"><strong>=</strong></span><span style="min-height:14pt;color:rgb(255,0,0);font-family:'Courier New';font-size:14pt;"><strong><em>"string"</em></strong></span>
+<span style="min-height:14pt;font-family:'Courier New';color:rgb(127,0,127);font-size:14pt;">
+column</span><span style="min-height:14pt;font-family:'Courier New';font-size:14pt;color:rgb(0,128,128);">=</span><span style="min-height:14pt;font-family:'Courier New';color:rgb(42,0,255);font-size:14pt;"><em>"username"</em></span>
+<span style="min-height:14pt;font-family:'Courier New';color:rgb(0,128,128);font-size:14pt;">
+/&gt;</span></div>
+<div style="min-height:14pt;"><span style="font-size:14pt;min-height:14pt;font-family:'Courier New';color:rgb(0,128,128);">         </span><span style="font-size:14pt;min-height:14pt;font-family:'Courier New';color:rgb(0,128,128);">&lt;</span><span style="font-size:14pt;min-height:14pt;font-family:'Courier New';color:rgb(63,127,127);">result</span>
+<span style="font-size:14pt;min-height:14pt;font-family:'Courier New';color:rgb(127,0,127);">
+property</span><span style="font-size:14pt;min-height:14pt;font-family:'Courier New';color:rgb(0,128,128);">=</span><span style="font-size:14pt;min-height:14pt;font-family:'Courier New';color:rgb(42,0,255);"><em>"mobile"</em></span>
+<span style="font-size:14pt;min-height:14pt;font-family:'Courier New';color:rgb(1,1,1);">
+ </span><span style="font-size:14pt;min-height:14pt;font-family:'Courier New';color:rgb(127,0,127);">column</span><span style="font-size:14pt;min-height:14pt;font-family:'Courier New';color:rgb(0,128,128);">=</span><span style="font-size:14pt;min-height:14pt;font-family:'Courier New';color:rgb(42,0,255);"><em>"mobile"</em></span>
+<span style="font-size:14pt;min-height:14pt;font-family:'Courier New';color:rgb(0,128,128);">
+/&gt;</span></div>
+<div style="min-height:14pt;"><span style="background-color:rgb(251,250,248);">                       </span>
+<span style="font-size:14pt;background-color:rgb(251,250,248);color:rgb(255,0,0);">
+<strong>&lt;!--javatype指定的是user对象的属性的类型（例如id，posts），而oftype指定的是映射到list集合属性中pojo的类型（本例指的是post类型）--&gt;</strong></span></div>
+<div style="min-height:14pt;"><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">         </span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(0,128,128);font-family:'Courier New';">&lt;</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(63,127,127);font-family:'Courier New';">collection</span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+property</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"posts"</em></span><span style="min-height:14pt;background-color:rgb(251,250,248);">  </span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';color:rgb(255,0,0);">ofType</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"com.spenglu.Post"</em></span><span style="min-height:14pt;background-color:rgb(251,250,248);">  </span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';color:rgb(255,0,0);">javaType</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"java.util.ArrayList"</em></span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+column</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"userid"</em></span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(0,128,128);font-family:'Courier New';">&gt;</span></div>
+<div style="min-height:14pt;"><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">             </span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(0,128,128);font-family:'Courier New';">&lt;</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(63,127,127);font-family:'Courier New';">id</span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+property</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"id"</em></span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+column</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"post_id"</em></span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+javaType</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"int"</em></span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+jdbcType</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"INTEGER"</em></span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(0,128,128);font-family:'Courier New';">/&gt;</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">   </span></div>
+<div style="min-height:14pt;"><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">           </span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(0,128,128);font-family:'Courier New';">
+&lt;</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(63,127,127);font-family:'Courier New';">result</span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+property</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"title"</em></span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+column</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"title"</em></span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+javaType</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"string"</em></span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+jdbcType</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"VARCHAR"</em></span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(0,128,128);font-family:'Courier New';">/&gt;</span></div>
+<div style="min-height:14pt;"><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">           </span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(0,128,128);font-family:'Courier New';">
+&lt;</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(63,127,127);font-family:'Courier New';">result</span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+property</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"content"</em></span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+column</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"content"</em></span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+javaType</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"string"</em></span>
+<span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(127,0,127);font-family:'Courier New';">
+jdbcType</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">=</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(42,0,255);font-family:'Courier New';"><em>"VARCHAR"</em></span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(0,128,128);font-family:'Courier New';">/&gt;</span></div>
+<div style="min-height:14pt;"><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">         </span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(0,128,128);font-family:'Courier New';">&lt;/</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(63,127,127);font-family:'Courier New';">collection</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(0,128,128);font-family:'Courier New';">&gt;</span></div>
+<div><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);font-family:'Courier New';">    </span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(0,128,128);font-family:'Courier New';">&lt;/</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(212,212,212);color:rgb(63,127,127);font-family:'Courier New';">resultMap</span><span style="font-size:14pt;min-height:14pt;background-color:rgb(251,250,248);color:rgb(0,128,128);font-family:'Courier New';">&gt;</span></div>
+<br /></div>
+</div>
+            </div>
+                </div>
+				<div class="hide-article-box text-center">
+			<a class="btn btn-red-hollow" id="btn-readmore" data-track-view='{"mod":"popu_376","con":",https://blog.csdn.net/u013216156/article/details/78642920,"}' data-track-click='{"mod":"popu_376","con":",https://blog.csdn.net/u013216156/article/details/78642920,"}'>阅读更多</a>
+		</div>
+        	</article>
+	
+		<div class="article-bar-bottom">
+						<div class="tags-box artic-tag-box">
+			<span class="label">文章标签：</span>
+						<a data-track-click='{"mod":"popu_626","con":"mybatis"}' data-track-view='{"mod":"popu_626","con":"mybatis"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=mybatis&t=blog" target="_blank">mybatis						<a data-track-click='{"mod":"popu_626","con":"ofType"}' data-track-view='{"mod":"popu_626","con":"ofType"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=ofType&t=blog" target="_blank">ofType						<a data-track-click='{"mod":"popu_626","con":"javaType"}' data-track-view='{"mod":"popu_626","con":"javaType"}' class="tag-link" href="http://so.csdn.net/so/search/s.do?q=javaType&t=blog" target="_blank">javaType						</a>
+		</div>
+						<div class="tags-box">
+			<span class="label">个人分类：</span>
+						<a class="tag-link" href="https://blog.csdn.net/u013216156/article/category/7279358"  target="_blank">web						</a>
+		</div>
+								<div class="tags-box hot-word">
+			<span class="label">相关热词：</span>
+						<a class="tag-link" href="https://blog.csdn.net/qq_39019865/article/details/78909274" target="_blank">
+			mybatis和			</a>
+						<a class="tag-link" href="https://blog.csdn.net/dange_h/article/details/79196451" target="_blank">
+			和mybatis			</a>
+						<a class="tag-link" href="https://blog.csdn.net/j04110414/article/details/78914787" target="_blank">
+			mybatis的			</a>
+						<a class="tag-link" href="https://blog.csdn.net/u013552450/article/details/72528498" target="_blank">
+			mybatis…			</a>
+						<a class="tag-link" href="https://blog.csdn.net/u013552450/article/details/72528498" target="_blank">
+			mybatis'			</a>
+					</div>
+			</div>
+	
+	<!-- !empty($pre_next_article[0]) -->
+			<div class="related-article related-article-prev text-truncate">
+		<a href="https://blog.csdn.net/u013216156/article/details/78626440">
+			<span>上一篇</span>Spring给bean注入日期属性的方法		</a>
+	</div>
+				<div class="related-article related-article-next text-truncate">
+		<a href="https://blog.csdn.net/u013216156/article/details/78677740">
+			<span>下一篇</span>在Ubuntu中安装eclipse图文详解		</a>
+	</div>
+	</div>
+<script>
+    $(".MathJax").remove();
+</script>
+
+<!-- 博客详情页PC增加广告系统刷量代码 -->
+<div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+<script id="adJs52b5334"></script>
+<script>document.getElementById("adJs52b5334").src = "https://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+</div>
+
+<script type="text/javascript" src="https://static-blog.csdn.net/mdeditor/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+			"HTML-CSS": {
+					linebreaks: { automatic: true, width: "94%container" },
+					imageFont: null
+			},
+			tex2jax: {
+				preview: "none"
+			},
+			mml2jax: {
+				preview: 'none'
+			}
+	});
+</script>
+<script>
+	(function(){
+		var btnReadmore = $("#btn-readmore");
+		if(btnReadmore.length>0){
+			var winH = $(window).height();
+			var articleBox = $("div.article_content");
+			var artH = articleBox.height();
+			if(artH > winH*2){
+				articleBox.css({
+					'height':winH*2+'px',
+					'overflow':'hidden'
+				})
+				btnReadmore.click(function(){
+					articleBox.removeAttr("style");
+					$(this).parent().remove();
+				})
+			}else{
+				btnReadmore.parent().remove();
+			}
+		}
+	})()
+</script>
+        <div class="p4course_target" ></div><script>window.p4sdk_enable_courseBox=true</script>        <a id="commentBox"></a>
+<div class="comment-box">
+	  	<div class="unlogin-box text-center">
+		想对作者说点什么？
+		<!-- $curl 当前地址 -->
+		<a href="https://passport.csdn.net/account/login?from=https://blog.csdn.net/u013216156/article/details/78642920#commentBox" class="btn btn-sm btn-red">我来说一句</a>
+	</div>
+			<div class="comment-list-container">
+		<a id="comments"></a>
+		<div class="comment-list-box">
+		</div>
+		<div id="commentPage" class="pagination-box d-none"></div>
+		<div class="opt-box text-center">
+			<button class="btn btn-sm btn-link-blue" id="btnMoreComment"></button>
+		</div>
+	</div>
+</div>        <div class="recommend-box">
+            		<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/EAST_1989/article/details/77104971,BlogCommendFromBaidu_0"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/EAST_1989/article/details/77104971,BlogCommendFromBaidu_0"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/EAST_1989/article/details/77104971" target="_blank" title="jdbcType、<em>javaType</em> 、<em>ofType</em>">
+					jdbcType、<em>javaType</em> 、<em>ofType</em>				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/EAST_1989" target="_blank">
+						<img src="https://avatar.csdn.net/0/F/B/3_east_1989.jpg" alt="EAST_1989" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">EAST_1989</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">08-12</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						1782</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/EAST_1989/article/details/77104971" target="_blank" >
+						jdbcType、javaType 、ofType					</a>
+				</p>
+		</div>
+				</div>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/hamov/article/details/77939045,BlogCommendFromBaidu_1"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/hamov/article/details/77939045,BlogCommendFromBaidu_1"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/hamov/article/details/77939045" target="_blank" title="<em>mybatis</em>一对多关系 collection的使用">
+					<em>mybatis</em>一对多关系 collection的使用				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/hamov" target="_blank">
+						<img src="https://avatar.csdn.net/F/D/3/3_hamov.jpg" alt="hamov" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">hamov</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">09-11</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						282</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/hamov/article/details/77939045" target="_blank" >
+						实体类Department.java
+public class Department {
+    private Integer id;
+    private String departmentN...					</a>
+				</p>
+		</div>
+				</div>
+														<div class="recommend-item-box recommend-ad-box">
+						<script type="text/javascript" src="//cee1.iteye.com/pkcgstjjm.js"></script>
+					</div>
+							
+				<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/LovKee/article/details/69076961,BlogCommendFromBaidu_2"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/LovKee/article/details/69076961,BlogCommendFromBaidu_2"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/LovKee/article/details/69076961" target="_blank" title="<em>mybatis</em>的<em>javaType</em>和<em>ofType</em>">
+					<em>mybatis</em>的<em>javaType</em>和<em>ofType</em>				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/LovKee" target="_blank">
+						<img src="https://avatar.csdn.net/5/3/1/3_lovkee.jpg" alt="LovKee" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">LovKee</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">04-04</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						2690</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/LovKee/article/details/69076961" target="_blank" >
+						都是指定对象的类型 不同的是当使用反向查询select从另一个maper文件中取出数据时必须用ofType
+
+都可以为collection和association是指定对象的类型,
+
+都不是必...					</a>
+				</p>
+		</div>
+				</div>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/gdutxiaoxu/article/details/68926515,BlogCommendFromBaidu_3"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/gdutxiaoxu/article/details/68926515,BlogCommendFromBaidu_3"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/gdutxiaoxu/article/details/68926515" target="_blank" title="java Type 详解">
+					java Type 详解				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/gdutxiaoxu" target="_blank">
+						<img src="https://avatar.csdn.net/5/A/9/3_gdutxiaoxu.jpg" alt="gdutxiaoxu" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">gdutxiaoxu</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">03-31</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						1.5万</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/gdutxiaoxu/article/details/68926515" target="_blank" >
+						前言错误可分为两种：编译时错误与运行时错误。编译时错误在编译时可以发现并排除，而运行时错误具有很大的不确定性，在程序运行时才能发现，造成的后果可能是灾难性的。泛型的引入使得一部分错误可以提前到编译时期...					</a>
+				</p>
+		</div>
+						<div class="img-box float-right">
+				<a href="https://blog.csdn.net/gdutxiaoxu/article/details/68926515">
+					<img src="https://csdnimg.cn/release/phoenix/article_rand_pic/lang/lang30.jpg" alt="">	
+				</a>
+			</div>
+			</div>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/qq_29233973/article/details/51433924,BlogCommendFromBaidu_4"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/qq_29233973/article/details/51433924,BlogCommendFromBaidu_4"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/qq_29233973/article/details/51433924" target="_blank" title="<em>Mybatis</em> 框架使用的最核心内容（二）：mapper.xml中常用的标签详解">
+					<em>Mybatis</em> 框架使用的最核心内容（二）：mapper.xml中常用的标签详解				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/qq_29233973" target="_blank">
+						<img src="https://avatar.csdn.net/E/4/8/3_qq_29233973.jpg" alt="qq_29233973" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">qq_29233973</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">05-17</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						2.8万</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/qq_29233973/article/details/51433924" target="_blank" >
+						mybaits中的常用标签					</a>
+				</p>
+		</div>
+				</div>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/axuanqq/article/details/50764770,BlogCommendFromBaidu_5"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/axuanqq/article/details/50764770,BlogCommendFromBaidu_5"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/axuanqq/article/details/50764770" target="_blank" title="RxJava 过滤操作符 <em>ofType</em>">
+					RxJava 过滤操作符 <em>ofType</em>				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/axuanqq" target="_blank">
+						<img src="https://avatar.csdn.net/F/1/9/3_axuanqq.jpg" alt="axuanqq" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">axuanqq</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">02-29</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						1810</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/axuanqq/article/details/50764770" target="_blank" >
+						.ofType(class)  指定某个类型的class，过滤属于这个类型的的结果，其它抛弃
+例子:
+      Observable.just(&quot;first&quot;, 2, 3, &quot;four&quot;).of...					</a>
+				</p>
+		</div>
+				</div>
+								<div class="recommend-item-box recommend-ad-box" id="a_d_feed_0"></div>
+			<script>
+				var width = $("div.recommend-box").outerWidth() - 48;
+				NEWS_FEED({
+					w: width,
+					h: 60,
+					showid: 'Afihld',
+					placeholderId: 'a_d_feed_0',
+					inject: 'define',
+					define: {
+						imagePosition: 'right',
+						imageBorderRadius: 0,
+						imageWidth: 90,
+						imageHeight: 60,
+						imageFill: 'clip',
+						displayImage: true,
+						displayTitle: true,
+						titleFontSize: 20,
+						titleFontColor: '#333',
+						titleFontFamily: 'Microsoft Yahei',
+						titleFontWeight: 'bold',
+						titlePaddingTop: 0,
+						titlePaddingRight: 0,
+						titlePaddingBottom: 10,
+						titlePaddingLeft: 0,
+						displayDesc: true,
+						descFontSize: 14,
+						descPaddingLeft: 14,
+						descFontColor: '#6b6b6b',
+						descFontFamily: 'Microsoft Yahei',
+						paddingTop: 0,
+						paddingRight: 0,
+						paddingBottom: 0,
+						paddingLeft: 0,
+						backgroundColor: '#fff',
+						hoverColor: '#ca0c16'
+					}
+				})
+			</script>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/JasonTang1992/article/details/58600828,BlogCommendFromBaidu_6"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/JasonTang1992/article/details/58600828,BlogCommendFromBaidu_6"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/JasonTang1992/article/details/58600828" target="_blank" title="OpenFlowJ-Loxigen - <em>OFType</em>">
+					OpenFlowJ-Loxigen - <em>OFType</em>				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/JasonTang1992" target="_blank">
+						<img src="https://avatar.csdn.net/5/E/4/3_jasontang1992.jpg" alt="JasonTang1992" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">JasonTang1992</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">02-28</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						285</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/JasonTang1992/article/details/58600828" target="_blank" >
+						OpenFlowJ-Loxigen - OFType2/26/2017 11:07:29 PM 
+  最近在学习使用Floodlight，OpenFlowJ-Loxigen是Floodlight中对O...					</a>
+				</p>
+		</div>
+				</div>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/lichxi1002/article/details/43405185,BlogCommendFromBaidu_7"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/lichxi1002/article/details/43405185,BlogCommendFromBaidu_7"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/lichxi1002/article/details/43405185" target="_blank" title="AsEnumerable , <em>OfType</em> , Cast <em>区别</em>">
+					AsEnumerable , <em>OfType</em> , Cast <em>区别</em>				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/lichxi1002" target="_blank">
+						<img src="https://avatar.csdn.net/3/6/9/3_lichxi1002.jpg" alt="lichxi1002" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">lichxi1002</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">02-02</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						1245</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/lichxi1002/article/details/43405185" target="_blank" >
+						一、Enumerable.AsEnumerableTSource&gt; 方法
+            https://msdn.microsoft.com/zh-cn/library/bb335435%...					</a>
+				</p>
+		</div>
+				</div>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/minpann/article/details/51217106,BlogCommendFromBaidu_8"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/minpann/article/details/51217106,BlogCommendFromBaidu_8"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/minpann/article/details/51217106" target="_blank" title="<em>Mybatis</em>中Collection集合标签的使用">
+					<em>Mybatis</em>中Collection集合标签的使用				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/minpann" target="_blank">
+						<img src="https://avatar.csdn.net/D/D/9/3_minpann.jpg" alt="minpann" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">minpann</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">04-22</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						4.4万</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/minpann/article/details/51217106" target="_blank" >
+						mybatis简单的CURD就不用多说了，网上相关博客文档一大堆。分析一下Mybatis里面的collection聚集查询。 
+假设一个班级有多名学生为例，通过班级号查询出该班级的信息，和班级里面的所...					</a>
+				</p>
+		</div>
+				</div>
+					<div class="recommend-item-box type_blog clearfix" data-track-view='{"mod":"popu_387","con":",https://blog.csdn.net/zou2ouzou/article/details/70255751,BlogCommendFromBaidu_9"}' data-track-click='{"mod":"popu_387","con":",https://blog.csdn.net/zou2ouzou/article/details/70255751,BlogCommendFromBaidu_9"}'>
+		<div class="float-left">
+			<h4 class="text-truncate oneline">
+				<a href="https://blog.csdn.net/zou2ouzou/article/details/70255751" target="_blank" title="关于<em>mybatis</em>的jdbcType和<em>javaType</em>的使用场景问题">
+					关于<em>mybatis</em>的jdbcType和<em>javaType</em>的使用场景问题				</a>
+			</h4>
+			<div class="info-box d-flex align-content-center">
+				<p>
+					<a class="avatar" src="https://blog.csdn.net/zou2ouzou" target="_blank">
+						<img src="https://avatar.csdn.net/E/0/3/3_zou2ouzou.jpg" alt="zou2ouzou" class="avatar-pic">
+						<span class="namebox">
+							<span class="name">zou2ouzou</span>
+							<span class="triangle"></span>
+						</span>
+					</a>
+				</p>
+				<p class="date-and-readNum">
+					<span class="date hover-show">04-20</span>
+					<span class="read-num hover-hide">
+						<svg class="icon csdnc-yuedushu" aria-hidden="true">
+							<use xlink:href="#csdnc-yuedushu"></use>
+						</svg>
+						1103</span>
+					</p>
+				</div>
+				<p class="content oneline">
+					<a class="oneline" href="https://blog.csdn.net/zou2ouzou/article/details/70255751" target="_blank" >
+						1.mybatis的jdbcType什么时候用？
+   使用MyBatis框架做更新操作时，在该字段需要更新的内容为空时，就会出现1111错误，也就是无效的列类型，这个时候你就要使用jdbcType...					</a>
+				</p>
+		</div>
+				</div>
+			
+            <div class="recommend-loading-box">
+                <img src='https://csdnimg.cn/release/phoenix/images/feedLoading.gif'>
+            </div>
+            <div class="recommend-end-box">
+                <p class="text-center">没有更多推荐了，<a href="https://blog.csdn.net/" class="c-blue c-blue-hover c-blue-focus">返回首页</a></p>
+            </div>
+        </div>
+    </main>
+    <aside>
+		    <div id="asideProfile" class="aside-box">
+    <h3 class="aside-title">个人资料</h3>
+    <div class="profile-intro d-flex">
+        <div class="avatar-box d-flex justify-content-center flex-column">
+            <a href="https://blog.csdn.net/u013216156">
+                <img src="https://avatar.csdn.net/C/6/2/3_u013216156.jpg" class="avatar_pic">
+            </a>
+        </div>
+        <div class="user-info d-flex justify-content-center flex-column">
+            <p class="name csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                <a href="https://blog.csdn.net/u013216156" target="_blank" class="text-truncate" id="uid">spenglu</a>
+            </p>
+                    </div>
+                <div class="opt-box d-flex justify-content-center flex-column">
+            <span  class="csdn-tracking-statistics tracking-click" data-mod="popu_379">
+                                <a class="btn btn-sm btn-red-hollow" href="https://passport.csdn.net/account/login?from=https://blog.csdn.net/u013216156/article/details/78642920" target="_self">关注</a>
+                            </span>
+                    </div>
+            </div>
+    <div class="data-info d-flex item-tiling">
+                <dl class="text-center" title="16">
+                        <dt><a href="https://blog.csdn.net/u013216156?t=1">原创</a></dt>
+            <dd><a href="https://blog.csdn.net/u013216156?t=1"><span class="count">16</span></a></dd>
+                    </dl>
+        <dl class="text-center" title="2">
+            <dt>粉丝</dt>
+            <dd><span class="count" id="fan">2</span></dd>
+        </dl>
+        <dl class="text-center" title="1">
+            <dt>喜欢</dt>
+            <dd><span class="count">1</span></dd>
+        </dl>
+        <dl class="text-center" title="4">
+            <dt>评论</dt>
+            <dd><span class="count">4</span></dd>
+        </dl>
+    </div>
+    <div class="grade-box clearfix">
+        <dl>
+            <dt>等级：</dt>
+            <dd>
+                <a href="https://blog.csdn.net/home/help.html#level" title="2级,点击查看等级说明" target="_blank">
+                    <svg class="icon icon-level" aria-hidden="true">
+                        <use xlink:href="#csdnc-bloglevel-2"></use>
+                    </svg>
+                </a>
+            </dd>
+        </dl>
+        <dl>
+            <dt>访问：</dt>
+            <dd title="33022">
+                3万+            </dd>
+        </dl>
+        <dl>
+            <dt>积分：</dt>
+            <dd title="386">
+                386            </dd>
+        </dl>
+        <dl title="217411">
+            <dt>排名：</dt>
+            <dd>21万+</dd>
+        </dl>
+    </div>
+        <div class="badge-box d-flex">
+        <span>勋章：</span>
+                        <a class="icon-badge" title="持之以恒">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#csdnc-m-lasting"></use>
+            </svg>
+            <div class="icon-arrow"></div>
+            <div class="grade-detail-box item2">
+                <div class="pos-box">
+                    <div class="left-box d-flex justify-content-center align-items-center flex-column">
+                        <svg class="icon" aria-hidden="true">
+                            <use xlink:href="#csdnc-m-lasting"></use>
+                        </svg>
+                        <p>持之以恒</p>
+                    </div>
+                    <div class="right-box d-flex justify-content-center align-items-center">
+                        授予每个自然月内发布4篇或4篇以上原创或翻译IT博文的用户。不积跬步无以至千里，不积小流无以成江海，程序人生的精彩需要坚持不懈地积累！
+                    </div>
+                </div>
+            </div>
+        </a>
+                            </div>
+    </div>		    <div class="csdn-tracking-statistics mb8 box-shadow" data-pid="blog" data-mod="popu_4" style="height:250px;">
+    <div class="aside-content text-center" id="cpro_u2734133">
+      <!-- 广告位：PC-博客内页-默认-300x250 -->
+                      <script type="text/javascript" src="//cee1.iteye.com/lgyyovfyh.js"></script>    </div>
+</div>
+		    <div id="asideNewArticle" class="aside-box">
+    <h3 class="aside-title">最新文章</h3>
+    <div class="aside-content">
+        <ul class="inf_list clearfix csdn-tracking-statistics tracking-click" data-mod="popu_382">
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/u013216156/article/details/78678510" target="_blank">MyBatis自动生成实体类、DAO接口和Mapping映射文件的代码（逆向工程）</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/u013216156/article/details/78677740" target="_blank">在Ubuntu中安装eclipse图文详解</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/u013216156/article/details/78626440" target="_blank">Spring给bean注入日期属性的方法</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/u013216156/article/details/78615911" target="_blank">Spring bean在相同xml文件和不同的xml文件中引用的方式</a>
+            </li>
+                        <li class="clearfix">
+                <a href="https://blog.csdn.net/u013216156/article/details/78615558" target="_blank">Spring一个类包含多个构造函数且带的参数相同所存在的注入类型问题</a>
+            </li>
+                    </ul>
+    </div>
+</div>
+		    		    <div id="asideCategory" class="aside-box">
+    <h3 class="aside-title">个人分类</h3>
+    <div class="aside-content">
+        <ul>
+                        <li>
+                <a href="https://blog.csdn.net/u013216156/article/category/6428730">
+                    java代码                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u013216156/article/category/6452480">
+                    java                    <span class="count float-right">5篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u013216156/article/category/6461676">
+                    算法                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u013216156/article/category/7255649">
+                    Linux                    <span class="count float-right">2篇</span>
+                </a>
+            </li>
+                        <li>
+                <a href="https://blog.csdn.net/u013216156/article/category/7279358">
+                    web                    <span class="count float-right">8篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+    </div>
+		    <div id="asideArchive" class="aside-box">
+    <h3 class="aside-title">归档</h3>
+    <div class="aside-content">
+        <ul class="archive-list">
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/u013216156/article/month/2017/11">
+                    2017年11月                    <span class="count float-right">10篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/u013216156/article/month/2017/05">
+                    2017年5月                    <span class="count float-right">5篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/u013216156/article/month/2016/10">
+                    2016年10月                    <span class="count float-right">3篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/u013216156/article/month/2016/09">
+                    2016年9月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                        <!--归档统计-->
+            <li>
+                <a href="https://blog.csdn.net/u013216156/article/month/2014/10">
+                    2014年10月                    <span class="count float-right">1篇</span>
+                </a>
+            </li>
+                    </ul>
+    </div>
+    </div>
+		    <div id="asideHotArticle" class="aside-box">
+	<h3 class="aside-title">热门文章</h3>
+	<div class="aside-content">
+		<ul class="hotArticle-list csdn-tracking-statistics tracking-click" data-mod="popu_521">
+							<li>
+					<a href="https://blog.csdn.net/u013216156/article/details/78677740">在Ubuntu中安装eclipse图文详解</a>
+					<p class="read">阅读量：<span>20592</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/u013216156/article/details/78642920">MyBatis ofType和javaType区别</a>
+					<p class="read">阅读量：<span>7120</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/u013216156/article/details/78615558">Spring一个类包含多个构造函数且带的参数相同所存在的注入类型问题</a>
+					<p class="read">阅读量：<span>1212</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/u013216156/article/details/78611139">Spring的@Autowired如何自动装配在bean配置文件中声明的两个类似的bean呢？</a>
+					<p class="read">阅读量：<span>1009</span></p>
+				</li>
+							<li>
+					<a href="https://blog.csdn.net/u013216156/article/details/72624965">单例模式与垃圾回收</a>
+					<p class="read">阅读量：<span>489</span></p>
+				</li>
+					</ul>
+	</div>
+</div>
+		    <div id="asideNewComments" class="aside-box">
+    <h3 class="aside-title">最新评论</h3>
+    <div class="aside-content">
+        <ul class="newcomment-list">
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/u013216156/article/details/78677740#comments">在Ubuntu中安装eclipse...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/xyn8935" class="user-name" target="_blank">xyn8935</a>：[reply]zhongnanheyou[/reply]
+兄弟,我也坑惨了,我输java -ver...                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/u013216156/article/details/78677740#comments">在Ubuntu中安装eclipse...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/qq_36301238" class="user-name" target="_blank">qq_36301238</a>：[reply]zhongnanheyou[/reply]
+不对，应该是你配置环境变量的时候直接复制...                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/u013216156/article/details/78677740#comments">在Ubuntu中安装eclipse...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/u013216156" class="user-name" target="_blank">u013216156</a>：[reply]zhongnanheyou[/reply]
+在终端中依次输入命令：
+jdk1.8.0...                </p>
+            </li>
+                        <li>
+                <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/u013216156/article/details/78677740#comments">在Ubuntu中安装eclipse...</a>
+                <p class="comment">
+                    <a href="https://my.csdn.net/zhongnanheyou" class="user-name" target="_blank">zhongnanheyou</a>：按你的方法配置jdk出现
+程序 'java' 已包含在下列软件包中： 
+ * default-jr...                </p>
+            </li>
+                    </ul>
+    </div>
+</div>
+		<div id="asideFooter">
+			
+		<div class="aside-box">
+						<script type="text/javascript" src="//cee1.iteye.com/avneunkwb.js"></script>
+					</div>
+				<div class="aside-box">
+			<div class="persion_article">
+			</div>
+		</div>
+	</div>
+</aside>
+<script src="https://csdnimg.cn/pubfooter/js/publib_footer-1.0.3.js" data-isfootertrack="false" type="text/javascript"></script>
+<script>
+	$("a.flexible-btn").click(function(){
+		$(this).parents('div.aside-box').removeClass('flexible-box');
+		$(this).remove();
+	})
+</script>
+</div>
+<div class="mask-dark"></div>
+<div class="pulllog-box" style="display: block;">
+	<div class="pulllog clearfix">
+		<span class="text float-left">
+			<!-- 广告位：PC-博客内页底通 文字链位置 -->
+			<script>
+			(function() {
+				var s = "_" + Math.random().toString(36).slice(2);
+				document.write('<div id="baidufooter_0001"></div>');
+				(window.slotbydup=window.slotbydup || []).push({
+					id: '5851901',
+					container: 'baidufooter_0001',
+					size: '520,40',
+					display: 'inlay-fix'
+				});
+			})();
+			</script>
+			<script src="https://dup.baidustatic.com/js/os.js"></script>
+			<style>
+				#baidufooter_0001{
+					display: none !important;
+				}
+			</style>
+		</span>
+		<div class="pulllog-btn float-right clearfix">
+            <button class="pulllog-login float-left csdn-tracking-statistics tracking-click" data-mod="popu_557">
+                登录
+            </button>
+            <div class="pulllog-sigin float-left csdn-tracking-statistics tracking-click" data-mod="popu_558">
+                <a href="https://passport.csdn.net/account/mobileregister" target="_blank">注册</a>
+            </div>
+            <button class="btn-close">
+                <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#csdnc-times"></use>
+                </svg>
+            </button>
+		</div>
+	</div>
+</div>
+<div id="loginWrap" style="display:none"></div>
+<div class="tool-box">
+	<ul class="meau-list">
+		<li>
+			<button class="btn-like " title="点赞">
+				<svg class="icon active" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup-ok"></use>
+				</svg><svg class="icon no-active" aria-hidden="true">
+					<use xlink:href="#csdnc-thumbsup"></use>
+				</svg>
+				<p>1</p>
+			</button>
+		</li>
+		<li>
+			<a class="btn-comments" title="写评论" href="#commentBox">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-comments"></use>
+				</svg><br>写评论			</a>
+		</li>
+		<li class="toc-container-box" id="liTocBox">
+			<button class="btn-toc" title="目录">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-contents"></use>
+				</svg><br>目录
+			</button>
+			<div class="toc-container">
+				<div class="pos-box">
+					<div class="icon-arrow"></div>
+					<div class="scroll-box">
+						<div class="toc-box"></div>
+					</div>
+				</div>
+				<div class="opt-box">
+					<button class="btn-opt prev nomore" title="向上">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevronup"></use>
+						</svg>
+					</button>
+					<button class="btn-opt next">
+						<svg class="icon" aria-hidden="true">
+							<use xlink:href="#csdnc-chevrondown"></use>
+						</svg>
+					</button>
+				</div>
+			</div>
+		</li>
+		<li>
+			<button class="btn-bookmark" title="收藏">
+				<svg class="icon active" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark-ok"></use>
+				</svg><svg class="icon no-active" aria-hidden="true">
+					<use xlink:href="#csdnc-bookmark"></use>
+				</svg><br>收藏
+			</button>
+		</li>
+				<li class="bdsharebuttonbox">
+			<a class="btn-comments bds_weixin" data-cmd="weixin" title="微信分享">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-wechat"></use>
+				</svg><br>微信
+			</a>
+		</li>
+		<li class="bdsharebuttonbox">
+			<a class="btn-comments bds_tsina" data-cmd="tsina" title="微博分享">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-weibo"></use>
+				</svg><br>微博
+			</a>
+		</li>
+		<li class="bdsharebuttonbox">
+			<a class="btn-comments bds_qzone" data-cmd="qzone" title="QQ分享">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#csdnc-qq"></use>
+				</svg><br>QQ
+			</a>
+		</li>
+	</ul>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'https://csdnimg.cn/static/api/js/share.js?v=89860594'];</script>
+<script>
+    var recommendCount = 10;
+    recommendCount = recommendCount > 1 ? (recommendCount + (recommendCount>6 ? 2 : 1)) : recommendCount;
+    var articleTit = "MyBatis ofType和javaType区别";
+    var ChannelId = 0;
+    var articleId = "78642920";
+    var commentscount = 0;
+    var islock = false;
+    var curentUrl = "https://blog.csdn.net/u013216156/article/details/78642920";
+    var myUrl = "https://my.csdn.net/";
+    //1禁止评论，2正常
+    var commentAuth = 2;
+    //百度搜索
+    var baiduKey = "oftype%E5%B1%9E%E6%80%A7";
+    var needInsertBaidu = true;
+    // 代码段样式
+    var codeStyle = '';
+    var highlight = ["mybatis","oftype","javatype","\u533a\u522b"];//高亮数组
+</script>
+<script src="https://csdnimg.cn/public/sandalstrap/1.3/js/sandalstrap.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/vendor/pagination/paging.js"></script>
+<script src='https://csdnimg.cn/public/common/gotop/js/goTop-v1.0.min.js?v201803151422'></script>
+<script>
+    GoTop({
+        right: 8,
+        hasReport: true,
+        reportFun: function() {
+            showReport(false,"MyBatis ofType和javaType区别");
+        }
+    })
+</script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/common-a4f198c74c.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/template/js/detail-518da8bacf.min.js"></script>
+<script src="https://csdnimg.cn/release/phoenix/themes/skin3-template/skin3-template-73eea35575.min.js"></script>
+<script src="https://csdnimg.cn/search/baidu_search-1.1.2.js?v=201802071056&autorun=true&install=true&keyword=oftype%E5%B1%9E%E6%80%A7"  type="text/javascript"></script>
+</body>
+<div class="box-box-aways">
+    <a class="btn-remove">
+        关闭
+    </a>
+    <div id="adAways">
+        <script>
+            (function() {
+            (window.slotbydup=window.slotbydup || []).push({
+            id: '5868728',
+            container: 'adAways',
+            size: '250,500',
+            display: 'inlay-fix'
+            });
+            })();
+            </script>
+        <script src="https://dup.baidustatic.com/js/os.js"></script>
+    </div>
+</div>
+<div class="box-box-default">
+    <a class="btn-remove">
+        关闭
+    </a>
+    <script type="text/javascript" src="//cee1.iteye.com/mhzzjepzz.js"></script>
+</div>
+<div class="box-box-large">
+    <a class="btn-remove">
+        关闭
+    </a>
+    <script type="text/javascript" src="//cee1.iteye.com/idvveasfs.js"></script>
+</div>
+<!-- 第四范式SDK -->
+<script charset="utf-8" src="https://nbrecsys.4paradigm.com/resource/js/sdk-csdn-smallflow.prod.0723.js" async defer></script>
+
+<!-- 高亮未与 markdown兼容  -->
+	<link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/chart.css" />
+	<script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/lib/chart.min.js"></script>
+	<script type="text/javascript" src="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/chart/widget2chart.js"></script>
+	<link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.3.1/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css">
+	<script type="text/javascript" src="https://csdnimg.cn/release/phoenix/production/pc_wap_common-93244aa03c.js" /></script>
+
+	<script type="text/javascript">
+	$(function(){
+		var allEscRegex = /&(lt|gt|amp|quot|nbsp|shy|#\d{1,5});/g,
+		    namedEntities = {
+					lt: '<',
+					gt: '>',
+					amp: '&',
+					quot: '"',
+					nbsp: '\u00a0',
+					shy: '\u00ad'
+				}
+		var allEscDecode = function( match, code ) {
+				return namedEntities[ code ];
+		};
+		htmlDecodeAttr = function( text ) {
+				return text.replace( allEscRegex, allEscDecode );
+		}
+	  hljs.initHighlightingOnLoad();
+	  hljs.initCopyButtonOnLoad();
+	  hljs.initLineNumbersOnLoad();
+		if($('pre .language-plain').length>0){
+			$('pre .language-plain').each(function(i,e){
+				var highlightRe = hljs.highlightAuto(htmlDecodeAttr(e.innerHTML))
+				e.innerHTML = highlightRe.value;
+				e.className = 'language-'+highlightRe.language;
+			});
+		}
+	})
+	</script>
+</html>
